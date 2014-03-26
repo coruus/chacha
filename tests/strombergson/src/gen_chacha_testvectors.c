@@ -239,9 +239,9 @@ void print_block(uint8_t block[64]) {
 
     printf("0x%02x ", block[i]);
 
-    if (((i + 1) % 8) == 0) {
+    /*if (((i + 1) % 8) == 0) {
       printf("\n");
-    }
+    }*/
   }
   printf("\n");
 }
@@ -254,18 +254,18 @@ void print_block(uint8_t block[64]) {
 void print_key_iv(uint8_t* key, uint32_t keylen, uint8_t* iv) {
   uint8_t i;
 
-  printf("Key:    ");
+  printf("Key:   ");
   for (i = 0; i < (keylen / 8); i++) {
-    if ((i > 0) && (0 == (i % 8))) {
+    /*if ((i > 0) && (0 == (i % 8))) {
       printf("\n        ");
-    }
-    printf("0x%02x ", key[i]);
+    }*/
+    printf(" 0x%02x", key[i]);
   }
   printf("\n");
 
-  printf("IV:     ");
+  printf("IV:    ");
   for (i = 0; i < 8; i++) {
-    printf("0x%02x ", iv[i]);
+    printf(" 0x%02x", iv[i]);
   }
   printf("\n");
 }
@@ -312,8 +312,10 @@ void gen_testvectors(uint8_t* key, uint8_t* iv) {
   // using 8, 12 or 20 rounds.
   for (ki = 0; ki < 2; ki++) {
     for (ri = 0; ri < 3; ri++) {
+      printf("Rounds: %d\n", rounds[ri]);
+      printf("Keylen: %d\n", keylengths[ki]);
       print_key_iv(key, keylengths[ki], iv);
-      printf("Rounds: %d\n\n", rounds[ri]);
+      printf("\n");
 
       init_ctx(&my_ctx, rounds[ri]);
       init(&my_ctx, key, keylengths[ki], iv);
@@ -325,11 +327,11 @@ void gen_testvectors(uint8_t* key, uint8_t* iv) {
 
       next(&my_ctx, data, result1);
 
-      printf("Keystream block 0:\n");
+      printf("Keystream block 0: ");
       print_block(result0);
-      printf("Keystream block 1:\n");
+      printf("Keystream block 1: ");
       print_block(result1);
-      printf("\n");
+      printf("\n\n");
     }
   }
 }
