@@ -109,5 +109,5 @@ Session.vim
 .netrwhist
 *~
 
-
-.ninja_deps .ninja_log
+.ninja_deps
+.ninja_log
