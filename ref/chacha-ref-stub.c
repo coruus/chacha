@@ -7,13 +7,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "chacha12.gen.c"
+#include "chachaROUNDS.gen.c"
 
-int chacha12_xor(uint8_t* const restrict out,
-                 const uint8_t* const restrict in,
-                 register const size_t inlen,
-                 const uint8_t* const restrict nonce,
-                 const uint8_t* const restrict key) {
+int chachaROUNDS_xor(uint8_t* const restrict out,
+                     const uint8_t* const restrict in,
+                     register const size_t inlen,
+                     const uint8_t* const restrict nonce,
+                     const uint8_t* const restrict key) {
   assert(out != in);
 
   if (inlen == 0) {
@@ -38,7 +38,7 @@ int chacha12_xor(uint8_t* const restrict out,
   do {
     // Copy the initial state back into the working copy.
     memcpy(x, input, 16 * 4);
-    _do_chacha12(x, input);
+    _do_chachaROUNDS(x, input);
     register size_t oplen;
     // Set oplen, while avoiding overflow.
     if (inpos > inlen) {

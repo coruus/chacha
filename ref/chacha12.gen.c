@@ -1,3 +1,7 @@
+static inline void _do_chacha12(register uint32_t x[16],
+                                register const uint32_t input[16]);
+static inline void _do_chacha12(register uint32_t x[16],
+                                register const uint32_t input[16]) {
   x[0] += x[4];
   x[12] ^= x[0];
   x[12] = rol(x[12], 16);
@@ -590,3 +594,4 @@
   x[13] += input[13];
   x[14] += input[14];
   x[15] += input[15];
+}

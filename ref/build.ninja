@@ -1,0 +1,10 @@
+include ../defs.ninja
+
+cflags = $cflags -I..
+
+build chacha8.c chacha12.c chacha20.c: script scripts/gen_impls.sh | chacha-ref-stub.c scripts/gen_unrolled.py scripts/gen_impls.sh
+build chacha8.gen.c chacha12.gen.c chacha20.gen.c: script scripts/gen_unrolled.py | scripts/gen_impls.sh scripts/gen_unrolled.py
+
+build libchacha_ref.dylib: dylib ../stubs/chacha.c chacha8.c chacha12.c chacha20.c
+build libchacha_ref_optim.dylib: dylib ../stubs/chacha.c chacha8.c chacha12.c chacha20.c
+  cflags = $cflags $coptim

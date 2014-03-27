@@ -68,12 +68,22 @@ IS_NONCE = "\n".join(IS_PART.format(si=14 + i, i=i, name="nonce")
                      for i in range(2))
 INIT_STATE = IS_CONS
 
+_TEMPLATE = """\
+static inline void _do_chacha{ROUNDS}(register uint32_t x[16],
+                                      register const uint32_t input[16]);
+static inline void _do_chacha{ROUNDS}(register uint32_t x[16],
+                                      register const uint32_t input[16]) {{
+{CODE}
+}}
+"""
+
+ADDINPUT = '\n'.join("  x[{i}] += input[{i}];"
+                     .format(i=i) for i in range(16))
+
 for rounds in [8, 12, 20]:
     ROUNDS = DROUND * (rounds // 2)
 
     with open("chacha{}.gen.c".format(rounds), "wb") as f:
-        print = partial(print, file=f)
-        print('\n'.join(qr for qr in ROUNDS))
-        PLUS = '\n'.join("  x[{i}] += input[{i}];"
-                         .format(i=i) for i in range(16))
-        print(PLUS)
+        code = '\n'.join(['\n'.join(qr for qr in ROUNDS),
+                          ADDINPUT])
+        f.write(_TEMPLATE.format(CODE=code, ROUNDS=rounds))
