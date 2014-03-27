@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 static inline bool isaligned(const void* const ptr, size_t alignment);
 

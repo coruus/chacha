@@ -3,13 +3,9 @@
 #define GPR_TOO 0
 
 #if __clang__
-
 #define VBPI 4
-
 #else
-
 #define VBPI 3
-
 #endif  // __clang__
 
 #define ONE (vec) _mm_set_epi32(0, 0, 0, 1)
@@ -23,7 +19,6 @@
   (vec)(_mm_slli_epi32((__m128i)x, 12) ^ _mm_srli_epi32((__m128i)x, 20))
 
 #if __SSSE3__
-
 #include <tmmintrin.h>
 #define ROTW8(x)          \
   (vec) _mm_shuffle_epi8( \
@@ -33,12 +28,9 @@
   (vec) _mm_shuffle_epi8( \
       (__m128i)x,         \
       _mm_set_epi8(13, 12, 15, 14, 9, 8, 11, 10, 5, 4, 7, 6, 1, 0, 3, 2))
-
-#else
-
+#else  // __SSSE3__
 #define ROTW8(x) \
   (vec)(_mm_slli_epi32((__m128i)x, 8) ^ _mm_srli_epi32((__m128i)x, 24))
 #define ROTW16(x) \
   (vec)(_mm_slli_epi32((__m128i)x, 16) ^ _mm_srli_epi32((__m128i)x, 16))
-
 #endif  // __SSSE3__

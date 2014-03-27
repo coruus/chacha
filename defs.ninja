@@ -1,0 +1,23 @@
+cstandard = -std=c11 -Wall -Weverything -Wextra -pedantic -fcolor-diagnostics
+csanitize = -fsanitize=local-bounds -fsanitize=address -fsanitize=undefined -fsanitize=integer -fsanitize-memory-track-origins
+csafety = -fstack-protector-all
+coptim = -O3 -march=native -fvectorize -fslp-vectorize -funroll-loops -freroll-loops -fslp-vectorize-aggressive
+cflags = $cstandard $csanitize $csafety
+depsflag = -MMD -MF
+
+rule cc
+  deps = gcc
+  depfile = $out.d
+  command = clang-3.5 $depsflag $out.d $cflags -c $in -o $out
+
+rule dylib
+  command = clang-3.5 $cflags -shared $in -o $out
+
+rule cexec
+  command = clang-3.5 $cflags $in -o $out
+
+rule pygen
+  command = python $in > $out
+
+rule script
+  command = $in

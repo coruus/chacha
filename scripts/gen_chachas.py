@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Generate the three ChaCha strengths."""
 
 _TEMPLATE = """\
@@ -8,7 +9,7 @@ _TEMPLATE = """\
 #ifdef CHACHA_KROVETZ
 #include "krovetz/chacha-krovetz.c"
 #else
-#include "chacha-ref.c"
+#include "ref/chacha-ref.c"
 #endif  // CHACHA_KROVETZ"""
 
 for rounds in [8, 12, 20]:

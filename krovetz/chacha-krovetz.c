@@ -109,6 +109,8 @@ int crypto_stream_xor(uint8_t* out,
 {
   assert(isaligned(out, 16) && "out not aligned to 16 bytes");
   assert(isaligned(in, 16) && "in not aligned to 16 bytes");
+  assert(isaligned(n, 16) && "nonce not aligned");
+  assert(isaligned(k, 16) && "key not aligned");
   size_t iters, i;
   uint32_t* op = (uint32_t*)out;
   uint32_t* ip = (uint32_t*)in;
@@ -174,6 +176,7 @@ int crypto_stream_xor(uint8_t* out,
     x9 = kp[5];
     x10 = kp[6];
     x11 = kp[7];
+    // TODO(dlg): THIS IS WRONG!!!!!!!!!!
     x12 = BPI * iters + (BPI - 1);
     x13 = 0;
     x14 = np[0];
