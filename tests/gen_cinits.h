@@ -6,6 +6,10 @@
 static inline void print_init(const uint64_t* const restrict in,
                               const size_t inlen,
                               const char* const restrict name,
+                              const uint8_t num);
+static inline void print_init(const uint64_t* const restrict in,
+                              const size_t inlen,
+                              const char* const restrict name,
                               const uint8_t num) {
   uint8_t* inbytes = (uint8_t * in);
   printf("static const uint8_t u8_%s%u[%zu] = { ", name, num, inlen);

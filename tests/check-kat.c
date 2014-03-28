@@ -8,16 +8,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define checkinv                                                    \
-  err = !iszero(zeros, len);                                        \
-  if (err != 0) {                                                   \
-    LOG("INVARIANT VIOLATED: zeros[i] != 0, /forall i < len\n");    \
-    goto fail;                                                      \
-  }                                                                 \
-  err = memcmp(expected, exbuf, len);                               \
-  if (err != 0) {                                                   \
-    LOG("INVARIANT VIOLATED: exbuf[i] != expected[i]\n");           \
-    goto fail;                                                      \
+#define checkinv                                                 \
+  err = !iszero(zeros, len);                                     \
+  if (err != 0) {                                                \
+    LOG("INVARIANT VIOLATED: zeros[i] != 0, /forall i < len\n"); \
+    goto fail;                                                   \
+  }                                                              \
+  err = memcmp(expected, exbuf, len);                            \
+  if (err != 0) {                                                \
+    LOG("INVARIANT VIOLATED: exbuf[i] != expected[i]\n");        \
+    goto fail;                                                   \
   }
 
 int check_kat(const uint8_t key[32],

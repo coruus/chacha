@@ -6,22 +6,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define make(TYPE, NAME, LEN)             \
+#define make(TYPE, NAME, LEN)              \
   TYPE* NAME = malloc(LEN * sizeof(TYPE)); \
-  if (NAME == NULL) {                     \
-    assert(0 && "allocation failure");    \
-    abort();                              \
-  }                                       \
+  if (NAME == NULL) {                      \
+    assert(0 && "allocation failure");     \
+    abort();                               \
+  }                                        \
   memset(NAME, 0, LEN * sizeof(TYPE));
 
-#define del(NAME) \
+#define del(NAME)     \
   if (NAME != NULL) { \
-    free(NAME);     \
-    NAME = NULL; \
+    free(NAME);       \
+    NAME = NULL;      \
   }
 
-#define LOG(message) \
-  printf("%s:%u %s\n", __FILE__, __LINE__, message);
+#define LOG(message) printf("%s:%u %s\n", __FILE__, __LINE__, message);
 
 static inline bool iszero(const uint8_t* const in, const size_t inlen);
 static inline bool iszero(const uint8_t* const in, const size_t inlen) {

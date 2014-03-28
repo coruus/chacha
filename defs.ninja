@@ -1,23 +1,43 @@
-cstandard = -std=c11 -Wall -Weverything -Wextra -pedantic -fcolor-diagnostics
-csanitize = -fsanitize=local-bounds -fsanitize=address -fsanitize=undefined -fsanitize=integer -fsanitize-memory-track-origins
+
+# Definitions for C compiler
+cc = clang-3.5
+shared_object = -shared
+cstandard = -g -std=c11 -Wall -Weverything -Wextra -pedantic -fcolor-diagnostics
+csanitize = -fsanitize=local-bounds -fsanitize=address -fsanitize=undefined -fsanitize=integer
 csafety = -fstack-protector-all
+carch = -march=native -maes
 coptim = -O3 -march=native -fvectorize -fslp-vectorize -funroll-loops -freroll-loops -fslp-vectorize-aggressive
-cflags = $cstandard $csanitize $csafety
+cflags = $cstandard $carch $csanitize $csafety
 depsflag = -MMD -MF
+
+# Definitions for assembler
+asm = yasm
+asmsyntax = -p nasm --prefix=_
+asmflags = $asmsyntax -m amd64 -f macho64 -D__linux__
+
+rule asm
+  command = $asm $asmflags -o $out $in
 
 rule cc
   deps = gcc
   depfile = $out.d
-  command = clang-3.5 $depsflag $out.d $cflags -c $in -o $out
+  command = $cc $depsflag $out.d $cflags -c $in -o $out
 
 rule dylib
-  command = clang-3.5 $cflags -shared $in -o $out
+  deps = gcc
+  depfile = $out.d
+  command = $cc $cflags $depsflag $out.d $shared_object $in -o $out
 
 rule cexec
-  command = clang-3.5 $cflags $in -o $out
+  deps = gcc
+  depfile = $out.d
+  command = $cc $depsflag $out.d $cflags $in -o $out
 
 rule pygen
   command = python $in > $out
 
 rule script
   command = $in
+
+rule ninja
+  command = ninja -C $dir
