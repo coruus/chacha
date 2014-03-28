@@ -1,5 +1,5 @@
 #include "chacha.h"
-#include "tests/chacha-kat-strombergson.h"
+#include "tests/kats/chacha-kat-strombergson.h"
 
 #include <assert.h>
 #include <stdio.h>

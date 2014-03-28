@@ -9,11 +9,25 @@
 
 #include "chacha12.gen.c"
 
+
+/*@ requires \valid(out + (0..inlen-1)) && \valid(in + (0..inlen-1))
+ *           && \valid(nonce + (0..8)) && \valid(key + (0..32));
+ *  behavior failure:
+ *    assumes inlen == 0 || inlen >= chacha_maxlen;
+ *    ensures \return == -1;
+ *    assigns \nothing;
+ *  behavior success:
+ *    assumes inlen != 0 && inlen < chacha_maxlen;
+ *    ensures \return == 0;
+ *    assigns out[0..inlen-1];
+ *  complete behaviors failure, success;
+ *  disjoint behaviors fails, success;
+ */
 int chacha12_xor(uint8_t* const restrict out,
-                 const uint8_t* const restrict in,
-                 register const size_t inlen,
-                 const uint8_t* const restrict nonce,
-                 const uint8_t* const restrict key) {
+                     const uint8_t* const restrict in,
+                     register const size_t inlen,
+                     const uint8_t* const restrict nonce,
+                     const uint8_t* const restrict key) {
   assert(out != in);
 
   if (inlen == 0) {
@@ -28,7 +42,7 @@ int chacha12_xor(uint8_t* const restrict out,
 
   // Initialize the state.
   uint32_t input[16] = {0};
-  memcpy(input, chacha256bit_constants, 4 * 4);
+  memcpy(input, chacha256bit_constants, 16);
   memcpy(input + 4, key, 32);
   memcpy(input + 14, nonce, 8);
   input[12] = 0;
@@ -36,21 +50,25 @@ int chacha12_xor(uint8_t* const restrict out,
 
   uint32_t x[16] = {0};
   do {
+    //@ loop variant remaining;
+    //@ assert (inpos < inlen) && (outpos < outlen);
+
     // Copy the initial state back into the working copy.
     memcpy(x, input, 16 * 4);
     _do_chacha12(x, input);
     register size_t oplen;
     // Set oplen, while avoiding overflow.
-    if (inpos > inlen) {
-      assert(0 && "unreachable");
-      oplen = 0;
-    } else if ((inlen - inpos) < 64) {
+    if ((inlen - inpos) < 64) {
       //@ assert (inlen - inpos) > 0;
       oplen = inlen - inpos;
     } else {
       //@ assert (inlen - inpos) >= 64;
       oplen = 64;
     }
+    // The xor uses only valid addresses.
+    /*@ assert \valid(out+outpos..out+outpos+oplen-1)
+     *      && \valid(in+inpos..in+inpos+oplen-1);
+     */
     xor(out + outpos, in + inpos, (uint8_t*)x, oplen);
 
     // Increment the 64-bit counter.
@@ -61,12 +79,15 @@ int chacha12_xor(uint8_t* const restrict out,
       input[13] += 1;
     }
 
-    // No overflow occurs:
+    // No unsigned underflow occurs:
     //@ assert (remaining - oplen) >= 0;
     remaining -= oplen;
     inpos += oplen;
     outpos += oplen;
   } while (remaining != 0);
+
+  // We have performed the full operation.
+  //@ assert (inpos == inlen) && (outpos == inlen);
 
   return 0;
 }

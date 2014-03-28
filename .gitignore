@@ -111,3 +111,4 @@ Session.vim
 
 .ninja_deps
 .ninja_log
+*.dSYM

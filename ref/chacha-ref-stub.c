@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "chacha20.gen.c"
+#include "chachaROUNDS.gen.c"
 
 
 /*@ requires \valid(out + (0..inlen-1)) && \valid(in + (0..inlen-1))
@@ -23,7 +23,7 @@
  *  complete behaviors failure, success;
  *  disjoint behaviors fails, success;
  */
-int chacha20_xor(uint8_t* const restrict out,
+int chachaROUNDS_xor(uint8_t* const restrict out,
                      const uint8_t* const restrict in,
                      register const size_t inlen,
                      const uint8_t* const restrict nonce,
@@ -55,7 +55,7 @@ int chacha20_xor(uint8_t* const restrict out,
 
     // Copy the initial state back into the working copy.
     memcpy(x, input, 16 * 4);
-    _do_chacha20(x, input);
+    _do_chachaROUNDS(x, input);
     register size_t oplen;
     // Set oplen, while avoiding overflow.
     if ((inlen - inpos) < 64) {
