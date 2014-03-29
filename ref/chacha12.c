@@ -9,7 +9,6 @@
 
 #include "chacha12.gen.c"
 
-
 /*@ requires \valid(out + (0..inlen-1)) && \valid(in + (0..inlen-1))
  *           && \valid(nonce + (0..8)) && \valid(key + (0..32));
  *  behavior failure:
@@ -24,10 +23,10 @@
  *  disjoint behaviors fails, success;
  */
 int chacha12_xor(uint8_t* const restrict out,
-                     const uint8_t* const restrict in,
-                     register const size_t inlen,
-                     const uint8_t* const restrict nonce,
-                     const uint8_t* const restrict key) {
+                 const uint8_t* const restrict in,
+                 register const size_t inlen,
+                 const uint8_t* const restrict nonce,
+                 const uint8_t* const restrict key) {
   assert(out != in);
 
   if (inlen == 0) {

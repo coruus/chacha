@@ -9,7 +9,6 @@
 
 #include "chachaROUNDS.gen.c"
 
-
 /*@ requires \valid(out + (0..inlen-1)) && \valid(in + (0..inlen-1))
  *           && \valid(nonce + (0..8)) && \valid(key + (0..32));
  *  behavior failure:

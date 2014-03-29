@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Generate a fully unrolled ChaCha implementation."""
+"""Generate a partially unrolled ChaCha implementation."""
 from __future__ import division, print_function
 
 from numpy import uint8, uint32
@@ -22,7 +22,7 @@ QUARTERROUND = """\
   b = rol(b, 7);"""
 
 
-def qround(a, b, c, d):
+def quarterround(a, b, c, d):
     """A ChaCha quarterround."""
     return (QUARTERROUND
             .replace("a", a)
@@ -40,8 +40,8 @@ DOUBLEROUND_MATRIX = [[0, 4, 8, 12],
                       [2, 7, 8, 13],
                       [3, 4, 9, 14]]
 
-DROUND = [qround(*['x[{}]'.format(i) for i in r])
-          for r in DRMAT]
+DOUBLEROUND = [quarterround(*['x[{}]'.format(i) for i in r])
+               for r in DOUBLEROUND_MATRIX]
 
 
 _TEMPLATE = """\
@@ -49,7 +49,10 @@ static inline void _do_chacha{ROUNDS}(register uint32_t x[16],
                                       register const uint32_t input[16]);
 static inline void _do_chacha{ROUNDS}(register uint32_t x[16],
                                       register const uint32_t input[16]) {{
-{CODE}
+  for (size_t i = 0; i < {doublerounds}; i++) {{
+{DOUBLEROUND}
+  }}
+  {addinput}
 }}
 """
 _ADDINPUT = "  x[{i}] += input[{i}];"
@@ -57,9 +60,8 @@ _ADDINPUT = "  x[{i}] += input[{i}];"
 ADDINPUT = '\n'.join(_ADDINPUT.format(i=i) for i in range(16))
 
 for rounds in [8, 12, 20]:
-    ROUNDS = DROUND * (rounds // 2)
-
     with open("chacha{}.gen.c".format(rounds), "wb") as f:
-        code = '\n'.join(['\n'.join(qr for qr in ROUNDS),
-                          ADDINPUT])
-        f.write(_TEMPLATE.format(CODE=code, ROUNDS=rounds))
+        f.write(_TEMPLATE.format(doublerounds=rounds//2,
+                                 DOUBLEROUND='\n'.join(DOUBLEROUND),
+                                 addinput=ADDINPUT,
+                                 ROUNDS=rounds))

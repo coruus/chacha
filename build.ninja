@@ -9,8 +9,9 @@ build ref/chacha8.c ref/chacha12.c ref/chacha20.c: script ref/scripts/gen_impls.
 #build ref/chacha8.gen.c ref/chacha12.gen.c ref/chacha20.gen.c: script ref/scripts/gen_unrolled.py | ref/scripts/gen_impls.sh ref/scripts/gen_unrolled.py
 
 build libchacha_ref.dylib: dylib stubs/chacha.c ref/chacha8.c ref/chacha12.c ref/chacha20.c
-#build libchacha_ref_optim.dylib: dylib stubs/chacha.c ref/chacha8.c ref/chacha12.c ref/chacha20.c
-#  cflags = $cflags $coptim
+build libchacha_ref_optim.dylib: dylib stubs/chacha.c ref/chacha8.c ref/chacha12.c ref/chacha20.c
+  cflags = $cflags $coptim
 
-build tests/test_strombergson: cexec tests/strombergson/src/test_strombergson.c libchacha_ref.dylib
-
+build tests/test_strombergson: cexec tests/strombergson/src/test_strombergson.c libchacha_ref_optim.dylib
+build utils/do_rdtsc.o: asm utils/do_rdtsc.s
+build tests/bench: cexec tests/bench.c libchacha_ref_optim.dylib utils/do_rdtsc.o
