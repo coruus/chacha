@@ -169,7 +169,7 @@ int64 ctarget
 stack64 bytes_backup
 
 
-enter ECRYPT_keystream_bytes
+enter chacha_keystream_bytes
 
 x = arg1
 m = arg2
@@ -187,20 +187,7 @@ out -= bytes
 goto start
 
 
-enter ECRYPT_decrypt_bytes
-
-x = arg1
-m = arg2
-out = arg3
-bytes = arg4
-
-              unsigned>? bytes - 0
-goto done if !unsigned>
-
-goto start
-
-
-enter ECRYPT_encrypt_bytes
+enter _chacha_xor_bytes
 
 x = arg1
 m = arg2
@@ -955,89 +942,3 @@ uint32323232 diag3 ^= *(int128 *) (m + 48)
   out += 64
   m += 64
 goto bytesbetween1and255
-
-
-enter ECRYPT_init
-leave
-
-
-enter ECRYPT_keysetup
-
-  k = arg2
-  kbits = arg3
-  x = arg1
-
-  in4 = *(uint32 *) (k + 0)
-  in5 = *(uint32 *) (k + 4)
-  in6 = *(uint32 *) (k + 8)
-  in7 = *(uint32 *) (k + 12)
-  *(uint32 *) (x + 16) = in4
-  *(uint32 *) (x + 20) = in5
-  *(uint32 *) (x + 24) = in6
-  *(uint32 *) (x + 28) = in7
-
-                   unsigned<? kbits - 256
-  goto kbits128 if unsigned<
-
-  kbits256:
-
-    in8 = *(uint32 *) (k + 16)
-    in9 = *(uint32 *) (k + 20)
-    in10 = *(uint32 *) (k + 24)
-    in11 = *(uint32 *) (k + 28)
-    *(uint32 *) (x + 32) = in8
-    *(uint32 *) (x + 36) = in9
-    *(uint32 *) (x + 40) = in10
-    *(uint32 *) (x + 44) = in11
-
-    in0 = 1634760805
-    in1 = 857760878
-    in2 = 2036477234
-    in3 = 1797285236
-    *(uint32 *) (x + 0) = in0
-    *(uint32 *) (x + 4) = in1
-    *(uint32 *) (x + 8) = in2
-    *(uint32 *) (x + 12) = in3
-
-  goto keysetupdone
-
-  kbits128:
-
-    in8 = *(uint32 *) (k + 0)
-    in9 = *(uint32 *) (k + 4)
-    in10 = *(uint32 *) (k + 8)
-    in11 = *(uint32 *) (k + 12)
-    *(uint32 *) (x + 32) = in8
-    *(uint32 *) (x + 36) = in9
-    *(uint32 *) (x + 40) = in10
-    *(uint32 *) (x + 44) = in11
-
-    in0 = 1634760805
-    in1 = 824206446
-    in2 = 2036477238
-    in3 = 1797285236
-    *(uint32 *) (x + 0) = in0
-    *(uint32 *) (x + 4) = in1
-    *(uint32 *) (x + 8) = in2
-    *(uint32 *) (x + 12) = in3
-
-  keysetupdone:
-
-leave
-
-
-enter ECRYPT_ivsetup
-
-  iv = arg2
-  x = arg1
-
-  in12 = 0
-  in13 = 0
-  in14 = *(uint32 *) (iv + 0)
-  in15 = *(uint32 *) (iv + 4)
-  *(uint32 *) (x + 48) = in12
-  *(uint32 *) (x + 52) = in13
-  *(uint32 *) (x + 56) = in14
-  *(uint32 *) (x + 60) = in15
-
-leave
