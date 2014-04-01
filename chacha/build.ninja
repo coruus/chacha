@@ -1,0 +1,25 @@
+include defs.ninja
+
+cflags = $cflags -I.
+so = dylib
+b = build
+
+# utility library for cleanup
+build $b/memclear-sse.o: asm utils/memclear-sse.s
+build $b/clearregs.o: asm utils/clearregs.s
+build $b/libclean.$so: dylib $b/memclear-sse.o $b/clearregs.o
+
+# stubs
+build stubs/chacha8.c stubs/chacha12.c stubs/chacha20.c: script stubs/scripts/gen_impls.sh | stubs/chacha-xor-template.c
+
+# reference implementation
+build ref/chacha8.c ref/chacha12.c ref/chacha20.c: script ref/scripts/gen_impls.sh | ref/chacha-ref-template.c ref/scripts/gen_unrolled.py
+#build ref/chacha8.gen.c ref/chacha12.gen.c ref/chacha20.gen.c: script ref/scripts/gen_unrolled.py | ref/scripts/gen_impls.sh ref/scripts/gen_unrolled.py
+
+build $b/libchacha_ref.$so: dylib stubs/chacha.c stubs/chacha8.c stubs/chacha12.c stubs/chacha20.c ref/chacha8.c ref/chacha12.c ref/chacha20.c $b/libclean.$so
+#  cflags = $cflags $coptim
+#build libchacha_ref_optim.$so: dylib stubs/chacha.c ref/chacha8.c ref/chacha12.c ref/chacha20.c
+
+build $b/test_strombergson: cexec tests/strombergson/test_strombergson.c $b/libchacha_ref.dylib
+build $b/do_rdtsc.o: asm utils/do_rdtsc.s
+build $b/bench: cexec tests/bench.c $b/libchacha_ref.$so $b/do_rdtsc.o

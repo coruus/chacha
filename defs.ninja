@@ -1,5 +1,0 @@
-include ninjas/c.ninja
-include ninjas/assembler.ninja
-include ninjas/scripts.ninja
-
-cflags = $cstandard $carch $coptim
