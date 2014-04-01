@@ -20,7 +20,7 @@ int chacha_state_chachaROUNDS(uint32_t chacha_state[16],
                               uint8_t* const restrict out,
                               const uint8_t* const restrict in,
                               register const size_t inlen) {
-  assert(out != in && "Aliasing assumption violated.");
+  // assert(out != in && "Aliasing assumption violated.");
 
   if (inlen == 0) {
     return -1;

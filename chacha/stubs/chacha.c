@@ -75,8 +75,9 @@ int chacha_xor(register uint8_t* out,
     case 20:
       return chacha20_xor(out, in, inlen, nonce, key);
     default:
-      assert(0 &&
-             "Only 8, 12, or 20 rounds are supported by this implementation.");
+      // assert(0 &&
+      //       "Only 8, 12, or 20 rounds are supported by this
+      //       implementation.");
       return -1;
   }
   __unreachable();
