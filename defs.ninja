@@ -1,46 +1,5 @@
+include ninjas/c.ninja
+include ninjas/assembler.ninja
+include ninjas/scripts.ninja
 
-# Definitions for C compiler
-cc = clang-3.5
-shared_object = -shared
-cstandard = -g -std=c11 -Wall -Weverything -Wextra -pedantic -fcolor-diagnostics
-csanitize = -fsanitize=local-bounds -fsanitize=address -fsanitize=undefined
-# Warns on unsigned overflow; useful to check occasionally, but is too annoying to enable
-# always.
-cannoying = -fsanitize=integer
-csafety = -fstack-protector-all
-carch = -march=native -maes
-coptim = -O3 -march=native -fvectorize -fslp-vectorize -funroll-loops -freroll-loops -fslp-vectorize-aggressive
-cflags = $cstandard $carch $csanitize $csafety
-depsflag = -MMD -MF
-
-# Definitions for assembler
-asm = yasm
-asmsyntax = -p nasm --prefix=_
-asmflags = $asmsyntax -m amd64 -f macho64 -D__linux__
-
-rule asm
-  command = $asm $asmflags -o $out $in
-
-rule cc
-  deps = gcc
-  depfile = $out.d
-  command = $cc $depsflag $out.d $cflags -c $in -o $out
-
-rule dylib
-  deps = gcc
-  depfile = $out.d
-  command = $cc $cflags $depsflag $out.d $shared_object $in -o $out
-
-rule cexec
-  deps = gcc
-  depfile = $out.d
-  command = $cc $depsflag $out.d $cflags $in -o $out
-
-rule pygen
-  command = python $in > $out
-
-rule script
-  command = $in
-
-rule ninja
-  command = ninja -C $dir
+cflags = $cstandard $carch $coptim

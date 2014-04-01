@@ -9,7 +9,6 @@
 
 #include "chachaROUNDS.gen.c"
 
-
 int chachaROUNDS_xor(uint8_t* const restrict out,
                      const uint8_t* const restrict in,
                      register const size_t inlen,

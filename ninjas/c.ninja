@@ -1,0 +1,28 @@
+# Definitions for C compiler
+cc = clang-3.5
+shared_object = -shared
+cstandard = -g -std=c11 -Wall -Weverything -Wextra -pedantic -fcolor-diagnostics
+csanitize = -fsanitize=local-bounds -fsanitize=address -fsanitize=undefined
+# Warns on unsigned overflow; useful to check occasionally, but is too annoying to enable
+# always.
+cannoying = -fsanitize=integer
+csafety = -fstack-protector-all
+carch = -march=native
+coptim = -O3 $carch -fvectorize -fslp-vectorize -funroll-loops -freroll-loops -fslp-vectorize-aggressive
+cflags = $cstandard $carch $csanitize $csafety
+depsflag = -MMD -MF
+
+rule cc
+  deps = gcc
+  depfile = $out.d
+  command = $cc $depsflag $out.d $cflags -c $in -o $out
+
+rule dylib
+  deps = gcc
+  depfile = $out.d
+  command = $cc $cflags $depsflag $out.d $shared_object $in -o $out
+
+rule cexec
+  deps = gcc
+  depfile = $out.d
+  command = $cc $depsflag $out.d $cflags $in -o $out
