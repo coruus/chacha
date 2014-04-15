@@ -1,5 +1,6 @@
 #include "chacha.h"
 #include "include/utils.h"
+#include "utils/clean.h"
 
 #include <assert.h>
 #include <stddef.h>
@@ -82,3 +83,8 @@ int chacha_xor(register uint8_t* out,
   }
   __unreachable();
 }
+
+// Include the implementations of the fixed-round stubs.
+#include "./gen/chacha8.c"
+#include "./gen/chacha12.c"
+#include "./gen/chacha20.c"

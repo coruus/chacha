@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "chachaROUNDS.gen.c"
+#include "./chachaROUNDS.gen.c"
 
 /* Generate a keystream from a ChaCha state and XOR it with the
  * output.
