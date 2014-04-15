@@ -60,7 +60,7 @@ _ADDINPUT = "  x[{i}] += input[{i}];"
 ADDINPUT = '\n'.join(_ADDINPUT.format(i=i) for i in range(16))
 
 for rounds in [8, 12, 20]:
-    with open("chacha{}.gen.c".format(rounds), "wb") as f:
+    with open("gen/chacha{}.gen.c".format(rounds), "wb") as f:
         f.write(_TEMPLATE.format(doublerounds=rounds//2,
                                  DOUBLEROUND='\n'.join(DOUBLEROUND),
                                  addinput=ADDINPUT,

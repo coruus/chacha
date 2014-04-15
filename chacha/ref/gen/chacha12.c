@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "chacha12.gen.c"
+#include "./chacha12.gen.c"
 
 /* Generate a keystream from a ChaCha state and XOR it with the
  * output.
@@ -17,9 +17,9 @@
  * process a stream and then resume.
  */
 int chacha_state_chacha12(uint32_t chacha_state[16],
-                          uint8_t* const restrict out,
-                          const uint8_t* const restrict in,
-                          register const size_t inlen) {
+                              uint8_t* const restrict out,
+                              const uint8_t* const restrict in,
+                              register const size_t inlen) {
   // assert(out != in && "Aliasing assumption violated.");
 
   if (inlen == 0) {
