@@ -34,13 +34,13 @@ int chacha_xor(register uint8_t* out,
 int chacha_state_init(uint32_t chacha_state[16],
                       register const uint8_t* const restrict key,
                       register const uint8_t* const restrict nonce,
-                      register const size_t stream_position,
+                      register const uint64_t stream_position,
                       register const size_t keybitlen);
 // Re-set the stream position and nonce; does not affect the nonce
-// if NULL is passed as a nonce.
-int chacha_state_reset(uint32_t chacha_state[16],
-                       register const uint8_t* const restrict nonce,
-                       register const size_t stream_position);
+// if nonce is NULL.
+extern inline int chacha_state_reset(uint32_t chacha_state[16],
+                                     register const uint8_t* const restrict nonce,
+                                     register const uint64_t stream_position);
 
 int chacha_state_chacha8(uint32_t chacha_state[16],
                          uint8_t* const restrict out,

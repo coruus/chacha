@@ -14,9 +14,9 @@ static const uint8_t tau[16] = "expand 16-byte k";
 /* Re-set a ChaCha position and nonce. If `nonce` is NULL, the current
  * nonce will not be changed.
  */
-inline int chacha_state_reset(uint32_t chacha_state[16],
-                              register const uint8_t* const restrict nonce,
-                              register const size_t stream_position) {
+extern inline int chacha_state_reset(uint32_t chacha_state[16],
+                                     register const uint8_t* const restrict nonce,
+                                     register const uint64_t stream_position) {
   uint64_t position = stream_position;
   memcpy(chacha_state + 12, &position, 8);
   if (nonce != NULL) {
@@ -28,9 +28,9 @@ inline int chacha_state_reset(uint32_t chacha_state[16],
 int chacha_state_init(uint32_t chacha_state[16],
                       register const uint8_t* const restrict key,
                       register const uint8_t* const restrict nonce,
-                      register const size_t stream_position,
+                      register const uint64_t stream_position,
                       register const size_t keybitlen) {
-  if (nonce == NULL) {
+  if ((nonce == NULL) || (key == NULL) || (chacha_state == NULL)) {
     return -1;
   }
   switch (keybitlen) {
