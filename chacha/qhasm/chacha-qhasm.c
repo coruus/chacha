@@ -26,7 +26,7 @@ int chacha_state_init(uint32_t chacha_state[16],
       goto setup128;
     default:
       return -1;
-   }
+  }
 
 setup256:
   memcpy(chacha_state, sigma, 16);
@@ -43,5 +43,3 @@ setposition:
 
   return 0;
 }
-
-

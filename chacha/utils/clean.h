@@ -7,5 +7,5 @@ void clearregs_avx(void);
 #else
 void clearregs_sse(void);
 #define clearregs clearregs_sse
-#endif // __AVX__
-#endif // CLEAN_H
+#endif  // __AVX__
+#endif  // CLEAN_H

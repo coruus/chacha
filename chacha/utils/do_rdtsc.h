@@ -6,4 +6,4 @@
 
 uint64_t do_rdtsc(void);
 
-#endif // DO_RDTSC_H
+#endif  // DO_RDTSC_H

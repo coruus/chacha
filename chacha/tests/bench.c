@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static const uint8_t ROUNDS[3] = { 8, 12, 20 };
+static const uint8_t ROUNDS[3] = {8, 12, 20};
 
 int main(void) {
   static const uint64_t N = 5000;

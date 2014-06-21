@@ -6,4 +6,3 @@ int chacha_keystream_bytes(uint32_t* x, uint8_t* out, size_t bytes);
 int chacha_xor_bytes(uint32_t* x, uint8_t* m, uint8_t* out, size_t bytes);
 
 #endif
-
