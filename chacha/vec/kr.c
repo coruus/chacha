@@ -32,6 +32,10 @@ typedef unsigned long long uint64_t;
  */
 #define ALLOW_UNDEFINED_BEHAVIOR 1
 
+#if !defined(ALLOW_UNDEFINED_BEHAVIOR) || (ALLOW_UNDEFINED_BEHAVIOR == 0)
+#include <string.h>
+#endif
+
 typedef uint32_t v4ui __attribute__((__vector_size__((4*4))));
 
 // Definitions of ChaCha
@@ -63,9 +67,9 @@ typedef uint32_t v4ui __attribute__((__vector_size__((4*4))));
 
 #define load_counter()                         \
   do {                                         \
-  state[3] = (v4ui){anonce[0], anonce[1],      \
-                    (uint32_t)(&counter)[0],   \
-                    (uint32_t)(&counter)[1]};  \
+  state[3] = (v4ui){(uint32_t)(&counter)[0],   \
+                    (uint32_t)(&counter)[1],   \
+                    anonce[0], anonce[1]};     \
   while (0)
 
 #define _xorblock_inaligned(out, x)               \
@@ -76,14 +80,20 @@ typedef uint32_t v4ui __attribute__((__vector_size__((4*4))));
     out[3] = ((v4ui*)in)[3] ^ (x[3] + state[3]);  \
     while (0)
 
-#define _xorblock(out, x)                    \
-    do [                                     \
+#define _xorblock_inrealign(out, x)          \
+    do {                                     \
     v4ui t[4];                               \
     memcpy(t, in, max(inlen, blocklen));     \
     t[0] ^= x[0]; t[1] ^= x[1];              \
     t[2] ^= x[2]; t[3] ^= x[3];              \
     memcpy(out, t, max(inlen, blocklen));    \
+    } while (0)
 
+#if !defined(ALLOW_UNDEFINED_BEHAVIOR) || (ALLOW_UNDEFINED_BEHAVIOR == 0)
+#define _xorblock _xorblock_inrealign
+#else
+#define _xorblock _xorblock_inaligned
+#endif
 
 #define xorblock(x) _xorblock(((v4ui*)out), x)
 
