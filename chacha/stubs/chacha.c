@@ -15,7 +15,8 @@ static const uint8_t tau[16] = "expand 16-byte k";
  * nonce will not be changed.
  */
 extern inline int chacha_state_reset(uint32_t chacha_state[16],
-                                     register const uint8_t* const restrict nonce,
+                                     register const uint8_t* const restrict
+                                         nonce,
                                      register const uint64_t stream_position) {
   uint64_t position = stream_position;
   memcpy(chacha_state + 12, &position, 8);

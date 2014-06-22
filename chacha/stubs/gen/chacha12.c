@@ -4,10 +4,10 @@
 #include <stdint.h>
 
 int chacha12_xor(register uint8_t* out,
-                 register const uint8_t* in,
-                 register size_t oplen,
-                 const uint8_t* restrict nonce,
-                 const uint8_t* restrict key) {
+                     register const uint8_t* in,
+                     register size_t oplen,
+                     const uint8_t* restrict nonce,
+                     const uint8_t* restrict key) {
   // Allocate page-aligned memory for the state.
   uint32_t* chacha_state = valloc(16 * 4);
   if (chacha_state == NULL) {
